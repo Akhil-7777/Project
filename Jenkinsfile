@@ -12,7 +12,6 @@ pipeline {
             steps {
                 git branch: 'main', 
                 url: 'https://github.com/Akhil-7777/Project',
-                credentialsId: 'your-github-credentials' // If private repo
             }
         }
 
@@ -25,7 +24,7 @@ pipeline {
         stage('Run Tests') {
             steps {
                 dir("tests"){
-                     sh 'python3 -m pytest tests/test_calculator.py -v'
+                     sh 'python3.9 -m pytest test_calculator.py -v'
                 }
             }
         }
