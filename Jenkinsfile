@@ -24,7 +24,11 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                sh 'python3 -m pytest -v'
+                sh '''
+                python3 -m pytest tests/test_calculator.py -v
+                python3 -m pytest --collect-only -v
+                PYTHONPATH=$PYTHONPATH:. pytest tests/ -v
+                '''
             }
         }
 
