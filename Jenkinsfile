@@ -25,7 +25,7 @@ pipeline {
         stage('Run Tests') {
             steps {
                 dir("tests"){
-                     sh 'sh 'python3 -m pytest test_calculator.py -v'
+                     sh 'sh python3 -m pytest test_calculator.py -v'
                 }
             }
         }
