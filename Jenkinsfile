@@ -10,8 +10,9 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-                git branch: 'master', 
-                url: 'https://github.com/Akhil-7777/Project.git',
+                git branch: 'main', 
+                url: 'https://github.com/Akhil-7777/Project',
+                credentialsId: 'your-github-credentials' // If private repo
             }
         }
 
