@@ -29,4 +29,4 @@ The Jenkins pipeline performs the following steps:
 ### Jenkinsfile
 
 ```groovy
-[paste your entire Jenkinsfile content here]
+
