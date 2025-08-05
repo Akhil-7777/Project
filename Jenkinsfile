@@ -24,11 +24,7 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                sh '''
-                echo "Current directory structure:"
-                ls -lR
-                python3 -m pytest ./tests/ -v
-                '''
+                sh 'python3 -m pytest -v'
             }
         }
 
