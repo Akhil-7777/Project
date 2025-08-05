@@ -18,7 +18,7 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh 'python3 -m pip install -r requirements.txt'
+                sh 'python3 -m pip install -r pytest==7.4.0'
             }
         }
 
