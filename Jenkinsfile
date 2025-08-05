@@ -3,25 +3,27 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = 'simple-python-app'
-        DOCKER_TAG = 'latest'
+        DOCKER_TAG = "${env.BUILD_ID}"
+        CONTAINER_NAME = 'python-app-container'
     }
 
     stages {
-        stage('Checkout') {
+        stage('Checkout Code') {
             steps {
-                git branch: 'main', url: 'https://github.com/Akhil-7777/Project.git'
+                git branch: 'master', 
+                url: 'https://Akhil-7777/Project.git',
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                sh 'pip install -r requirements.txt'
+                sh 'python3 -m pip install -r requirements.txt'
             }
         }
 
-        stage('Test') {
+        stage('Run Tests') {
             steps {
-                sh 'python -m pytest tests/ -v'
+                sh 'python3 -m pytest tests/ -v'
             }
         }
 
@@ -33,10 +35,20 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
+        stage('Deploy to Docker') {
             steps {
                 script {
-                    sh "docker run --rm ${DOCKER_IMAGE}:${DOCKER_TAG}"
+                    // Stop and remove any existing container
+                    sh "docker stop ${CONTAINER_NAME} || true"
+                    sh "docker rm ${CONTAINER_NAME} || true"
+                    
+                    // Run new container
+                    sh """
+                    docker run -d \
+                        --name ${CONTAINER_NAME} \
+                        -p 5000:5000 \
+                        ${DOCKER_IMAGE}:${DOCKER_TAG}
+                    """
                 }
             }
         }
@@ -44,13 +56,16 @@ pipeline {
 
     post {
         always {
-            echo 'Pipeline completed'
+            echo 'Pipeline execution completed'
+            cleanWs() // Clean workspace
         }
         success {
-            echo 'Pipeline succeeded!'
+            echo 'Deployment succeeded!'
+            slackSend(color: 'good', message: "SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
         }
         failure {
-            echo 'Pipeline failed!'
+            echo 'Deployment failed!'
+            slackSend(color: 'danger', message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
         }
     }
 }
